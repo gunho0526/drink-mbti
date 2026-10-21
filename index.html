@@ -376,6 +376,7 @@ let myType=null;
 function finish(){
   $('fill').style.transform='scaleX(1)';
   myType=score();
+  window.recordResult&&window.recordResult(myType);
   setShared(false);
   $('resultBody').innerHTML=detailHTML(myType);
   $('resultBody').className='reveal';
@@ -452,6 +453,21 @@ function setShared(on){
 
 themeFor(null);
 $('shelf').innerHTML=ORDER.map((t,i)=>`<img src="${IMG[t]}" alt="" style="--i:${i}">`).join('');
+</script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, increment } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+  const db = getFirestore(initializeApp({
+    apiKey: "AIzaSyBY0FkXkVMT_gSWLi2JahlxphVkogdUJlM",
+    authDomain: "drink-mbti.firebaseapp.com",
+    projectId: "drink-mbti",
+    storageBucket: "drink-mbti.firebasestorage.app",
+    messagingSenderId: "405628083567",
+    appId: "1:405628083567:web:cea1a1fb8ff2bb080f9c9a"
+  }));
+  window.recordResult = (type) => {
+    setDoc(doc(db, 'stats', type), { count: increment(1) }, { merge: true }).catch(() => {});
+  };
 </script>
 </body>
 </html>
